@@ -44,7 +44,7 @@ public class Grok
     // Instance fields
     // ---------------------------------------------------------------
 
-    private int       powerLevel;
+    private int powerLevel;
     private GrokState state;
 
     // ---------------------------------------------------------------
@@ -57,7 +57,7 @@ public class Grok
     public Grok()
     {
         this.powerLevel = DEFAULT_POWER_LEVEL;
-        this.state      = GrokState.DORMANT;
+        this.state = GrokState.DORMANT;
     }
 
     /**
@@ -93,7 +93,7 @@ public class Grok
      */
     public boolean isDormant()
     {
-        // TODO: replace this line with your code.
+        return state == GrokState.DORMANT;
     }
 
     /*
@@ -102,7 +102,7 @@ public class Grok
      */
     public boolean isWeakened()
     {
-        // TODO: replace this line with your code.
+        return state == GrokState.WEAKENED;
     }
 
     /*
@@ -111,7 +111,7 @@ public class Grok
      */
     public boolean isActive()
     {
-        // TODO: replace this line with your code.
+        return state == GrokState.ACTIVE;
     }
 
     /*
@@ -120,7 +120,7 @@ public class Grok
      */
     public boolean isDefeated()
     {
-        // TODO: replace this line with your code.
+        return state == GrokState.DEFEATED;
     }
 
     // ---------------------------------------------------------------
@@ -145,7 +145,16 @@ public class Grok
      */
     public void takePowerPill(PowerPill pill)
     {
-        // TODO: replace this line with your code.
+        if (state == GrokState.DEFEATED) {
+            return;
+        }
+        powerLevel += pill.getPower();
+        if (powerLevel >= 20) {
+            state = GrokState.ACTIVE;
+        }
+        else if (powerLevel > 0) {
+            state = GrokState.WEAKENED;
+        }
     }
 
     /*
@@ -156,8 +165,23 @@ public class Grok
      * a Grok in ACTIVE has at least 20 power and a single hit
      * reduces power by only 5.
      */
-    public void tookHit()
-    {
-        // TODO: replace this line with your code.
+    public void tookHit() {
+        if (state == GrokState.DEFEATED) {
+            return;
+        }
+        setPowerLevel(powerLevel - 5);
+
+        if (state == GrokState.DORMANT) {
+            return;
+        }
+        if (powerLevel <= 0) {
+            state = GrokState.DEFEATED;
+        }
+        else if (powerLevel >= 20) {
+            state = GrokState.ACTIVE;
+        }
+        else {
+            state = GrokState.WEAKENED;
+        }
     }
 }
